@@ -3,12 +3,8 @@
 
 #include "House.h"
 #include "MyTools.h"
-#include "ScreenSingleton.h"
-#include "Colors.h"
-
 
 using namespace std;
-using namespace MyTools;
 
 bool House::isInside(double x1, double x2) const
 {
@@ -35,17 +31,17 @@ bool House::isInside(double x1, double x2) const
 
 void House::Draw() const
 {
-	ScreenSingleton::getInstance().SetColor(CC_Yellow);
-	ScreenSingleton::getInstance().GotoXY(x, y - 5);
+	ScreenSingletone::getInstance().SetColor(CC_Yellow);
+	ScreenSingletone::getInstance().GotoXY(x, y - 5);
 	cout << "  ########  ";
-	ScreenSingleton::getInstance().GotoXY(x, y - 4);
+	ScreenSingletone::getInstance().GotoXY(x, y - 4);
 	cout << "##        ##";
-	ScreenSingleton::getInstance().GotoXY(x, y - 3);
+	ScreenSingletone::getInstance().GotoXY(x, y - 3);
 	cout << "############";
-	ScreenSingleton::getInstance().GotoXY(x, y - 2);
+	ScreenSingletone::getInstance().GotoXY(x, y - 2);
 	cout << "#          #";
-	ScreenSingleton::getInstance().GotoXY(x, y - 1);
+	ScreenSingletone::getInstance().GotoXY(x, y - 1);
 	cout << "#          #";
-	ScreenSingleton::getInstance().GotoXY(x, y);
+	ScreenSingletone::getInstance().GotoXY(x, y);
 	cout << "############";
 }

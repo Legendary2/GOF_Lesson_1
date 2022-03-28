@@ -3,10 +3,8 @@
 
 #include "Tank.h"
 #include "MyTools.h"
-#include "ScreenSingleton.h"
-#include "Colors.h"
+
 using namespace std;
-using namespace MyTools;
 
 bool Tank::isInside(double x1, double x2) const
 {
@@ -33,13 +31,13 @@ bool Tank::isInside(double x1, double x2) const
 
 void Tank::Draw() const
 {
-	ScreenSingleton::getInstance().SetColor(CC_Brown);
-	ScreenSingleton::getInstance().GotoXY(x, y - 3);
+	ScreenSingletone::getInstance().SetColor(CC_Brown);
+	ScreenSingletone::getInstance().GotoXY(x, y - 3);
 	cout << "    #####";
-	ScreenSingleton::getInstance().GotoXY(x-2, y - 2);
+	ScreenSingletone::getInstance().GotoXY(x-2, y - 2);
 	cout << "#######   #";
-	ScreenSingleton::getInstance().GotoXY(x, y - 1);
+	ScreenSingletone::getInstance().GotoXY(x, y - 1);
 	cout << "    #####";
-	ScreenSingleton::getInstance().GotoXY(x,y);
+	ScreenSingletone::getInstance().GotoXY(x,y);
 	cout << " ###########";
 }

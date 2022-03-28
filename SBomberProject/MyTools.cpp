@@ -9,32 +9,25 @@
 #include <fstream>
 #include <chrono>
 
-#include "ScreenSingleton.h"
+
 #include "MyTools.h"
-#include "Colors.h"
 
 using namespace std;
 
-// Палитра цветов от 0 до 15
-
-namespace MyTools {
-
-    ofstream logOut;
-
     //=============================================================================================
-
-    void ClrScr()
+    //реализация singletone из лекции
+    void ScreenSingletone::ClrScr()
     {
         system("cls");
     }
 
-    void __fastcall GotoXY(double x, double y)
+    void __fastcall ScreenSingletone::GotoXY(double x, double y)
     {
         const COORD cc = { short(x), short(y) };
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cc);
     }
 
-    uint16_t GetMaxX()
+    uint16_t ScreenSingletone::GetMaxX()
     {
         HANDLE hWndConsole;
         if (hWndConsole = GetStdHandle(-12))
@@ -50,7 +43,7 @@ namespace MyTools {
         return 0;
     }
 
-    uint16_t GetMaxY()
+    uint16_t ScreenSingletone::GetMaxY()
     {
         HANDLE hWndConsole;
         if (hWndConsole = GetStdHandle(-12))
@@ -65,20 +58,19 @@ namespace MyTools {
         return 0;
     }
 
-    void SetColor(ConsoleColor color)
+    void ScreenSingletone::SetColor(ConsoleColor color)
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleTextAttribute(hConsole, color); // color =  (WORD)((BackgroundColor << 4) | TextColor))
     }
 
-    //=============================================================================================
-
-    void __fastcall OpenLogFile(const string& FN)
+    //реализация Task 1: singletone
+    void FileLoggerSingletone::OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out);
     }
 
-    void CloseLogFile()
+    void FileLoggerSingletone::CloseLogFile()
     {
         if (logOut.is_open())
         {
@@ -86,7 +78,7 @@ namespace MyTools {
         }
     }
 
-    string GetCurDateTime()
+    string FileLoggerSingletone::GetCurDateTime()
     {
         auto cur = std::chrono::system_clock::now();
         time_t time = std::chrono::system_clock::to_time_t(cur);
@@ -96,7 +88,7 @@ namespace MyTools {
         return string(buf);
     }
 
-    void __fastcall WriteToLog(const string& str)
+    void  FileLoggerSingletone::WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
@@ -104,7 +96,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall WriteToLog(const string& str, int n)
+    void FileLoggerSingletone::WriteToLog(const string& str, int n)
     {
         if (logOut.is_open())
         {
@@ -112,7 +104,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall WriteToLog(const string& str, double d)
+    void FileLoggerSingletone::WriteToLog(const string& str, double d)
     {
         if (logOut.is_open())
         {
@@ -120,25 +112,34 @@ namespace MyTools {
         }
     }
     
-    //Task 1:
-    class FileLoggerSingletone
+    //реализация Task 2*:proxy
+
+    void ProxyLogger::OpenLogFile(const string& FN)
     {
-    public:
+        FileLoggerSingletone::getInstance().OpenLogFile(FN);
+    }
 
-        static FileLoggerSingletone& getInstance()
-        {
-            static FileLoggerSingletone theInstance;
-            return theInstance;
-        }
-        void __fastcall OpenLogFile(const std::string& FN);
-        void CloseLogFile();
-        void __fastcall WriteToLog(const std::string& str);
-        void __fastcall WriteToLog(const std::string& str, int n);
-        void __fastcall WriteToLog(const std::string& str, double d);
+    void ProxyLogger::CloseLogFile()
+    {
+        FileLoggerSingletone::getInstance().CloseLogFile();
+    }
 
-    private:
-        FileLoggerSingletone() {}
-        FileLoggerSingletone(const FileLoggerSingletone& root) = delete;
-        FileLoggerSingletone& operator = (const FileLoggerSingletone&) = delete;
-    };
-} // namespace MyTools
+    string ProxyLogger::GetCurDateTime()
+    {
+        FileLoggerSingletone::getInstance().GetCurDateTime();
+    }
+
+    void ProxyLogger::WriteToLog(const string& str)
+    {
+        FileLoggerSingletone::getInstance().WriteToLog(to_string(ProxyloggerEventNum++) + ' ' + str);
+    }
+    void ProxyLogger::WriteToLog(const string& str, int n)
+    {
+        FileLoggerSingletone::getInstance().WriteToLog(to_string(ProxyloggerEventNum++) + ' ' + str, n);
+    }
+
+    void ProxyLogger::WriteToLog(const string& str, double d)
+    {
+        FileLoggerSingletone::getInstance().WriteToLog(to_string(ProxyloggerEventNum++) + ' ' + str, d);
+    }
+    //=============================================================================================
