@@ -3,6 +3,8 @@
 
 #include "SBomber.h"
 #include "MyTools.h"
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -10,6 +12,7 @@ using namespace std;
 
 int main(void)
 {
+    std::this_thread::sleep_for(500ms);
     ProxyLogger::getInstance().OpenLogFile("log.txt");
 
     SBomber game;
