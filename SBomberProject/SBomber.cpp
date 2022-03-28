@@ -1,4 +1,4 @@
-#include "ScreenSingleton.h"
+
 #include <conio.h>
 #include <windows.h>
 
@@ -9,7 +9,7 @@
 #include "Tank.h"
 #include "House.h"
 
-using namespace MyTools;
+using namespace std;
 
 SBomber::SBomber()
     : exitFlag(false),
@@ -21,7 +21,8 @@ SBomber::SBomber()
     bombsNumber(10),
     score(0)
 {
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
     Plane* p = new Plane;
     p->SetDirection(1, 0.1);
     p->SetSpeed(4);
@@ -30,8 +31,8 @@ SBomber::SBomber()
 
     LevelGUI* pGUI = new LevelGUI;
     pGUI->SetParam(passedTime, fps, bombsNumber, score);
-    const uint16_t maxX = ScreenSingleton::getInstance().GetMaxX();
-    const uint16_t maxY = ScreenSingleton::getInstance().GetMaxY();
+    const uint16_t maxX = ScreenSingletone::getInstance().GetMaxX();
+    const uint16_t maxY = ScreenSingletone::getInstance().GetMaxY();
     const uint16_t offset = 3;
     const uint16_t width = maxX - 7;
     pGUI->SetPos(offset, offset);
@@ -92,7 +93,7 @@ SBomber::~SBomber()
 
 void SBomber::MoveObjects()
 {
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
@@ -105,7 +106,7 @@ void SBomber::MoveObjects()
 
 void SBomber::CheckObjects()
 {
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
     CheckPlaneAndLevelGUI();
     CheckBombsAndGround();
@@ -121,7 +122,7 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 void SBomber::CheckBombsAndGround() 
 {
-    std::vector<Bomb*> vecBombs = FindAllBombs();
+    vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
     for (size_t i = 0; i < vecBombs.size(); i++)
@@ -138,7 +139,7 @@ void SBomber::CheckBombsAndGround()
 
 void SBomber::CheckDestoyableObjects(Bomb * pBomb)
 {
-    std::vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
+    vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
     const double size_2 = size / 2;
     for (size_t i = 0; i < vecDestoyableObjects.size(); i++)
@@ -179,9 +180,9 @@ void SBomber::DeleteStaticObj(GameObject* pObj)
     }
 }
 
-std::vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
+vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
 {
-    std::vector<DestroyableGroundObject*> vec;
+    vector<DestroyableGroundObject*> vec;
     Tank* pTank;
     House* pHouse;
     for (size_t i = 0; i < vecStaticObj.size(); i++)
@@ -220,9 +221,9 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-std::vector<Bomb*> SBomber::FindAllBombs() const
+vector<Bomb*> SBomber::FindAllBombs() const
 {
-    std::vector<Bomb*> vecBombs;
+    vector<Bomb*> vecBombs;
 
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
@@ -273,7 +274,7 @@ void SBomber::ProcessKBHit()
         c = _getch();
     }
 
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked. key = ", c);
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked. key = ", c);
 
     switch (c) {
 
@@ -304,7 +305,7 @@ void SBomber::ProcessKBHit()
 
 void SBomber::DrawFrame()
 {
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
@@ -322,7 +323,7 @@ void SBomber::DrawFrame()
         }
     }
 
-    ScreenSingleton::getInstance().GotoXY(0, 0);
+    ScreenSingletone::getInstance().GotoXY(0, 0);
     fps++;
 
     FindLevelGUI()->SetParam(passedTime, fps, bombsNumber, score);
@@ -330,7 +331,7 @@ void SBomber::DrawFrame()
 
 void SBomber::TimeStart()
 {
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
     startTime = GetTickCount64();
 }
 
@@ -340,14 +341,14 @@ void SBomber::TimeFinish()
     deltaTime = uint16_t(finishTime - startTime);
     passedTime += deltaTime;
 
-    MyTools::WriteToLog(std::string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
+    ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
 }
 
 void SBomber::DropBomb()
 {
     if (bombsNumber > 0)
     {
-        MyTools::WriteToLog(std::string(__FUNCTION__) + " was invoked");
+        ProxyLogger::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
         Plane* pPlane = FindPlane();
         double x = pPlane->GetX() + 4;

@@ -1,12 +1,8 @@
 ﻿
 #include <conio.h>
 
-#include "ScreenSingleton.h"
 #include "SBomber.h"
 #include "MyTools.h"
-
-#include <chrono>
-#include <thread>
 
 using namespace std;
 
@@ -14,12 +10,11 @@ using namespace std;
 
 int main(void)
 {
-    MyTools::OpenLogFile("log.txt");
+    ProxyLogger::getInstance().OpenLogFile("log.txt");
 
     SBomber game;
 
-    do
-    {
+    do {
         game.TimeStart();
 
         if (_kbhit())
@@ -27,7 +22,7 @@ int main(void)
             game.ProcessKBHit();
         }
 
-        ScreenSingleton::getInstance().ClrScr();
+       ScreenSingletone::getInstance().ClrScr();
 
         game.DrawFrame();
         game.MoveObjects();
@@ -37,7 +32,7 @@ int main(void)
 
     } while (!game.GetExitFlag());
 
-    MyTools::CloseLogFile();
+    ProxyLogger::getInstance().CloseLogFile();
 
     return 0;
 }

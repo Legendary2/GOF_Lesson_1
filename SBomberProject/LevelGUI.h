@@ -27,3 +27,6 @@ private:
     uint16_t bombsNumber;
     int16_t score;
 };
+
+
+
