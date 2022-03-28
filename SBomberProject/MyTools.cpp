@@ -15,13 +15,13 @@
 using namespace std;
 
     //=============================================================================================
-    //реализация singletone из лекции
+    //singletone из лекции
     void ScreenSingletone::ClrScr()
     {
         system("cls");
     }
 
-    void __fastcall ScreenSingletone::GotoXY(double x, double y)
+    void ScreenSingletone::GotoXY(double x, double y)
     {
         const COORD cc = { short(x), short(y) };
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cc);
@@ -64,7 +64,7 @@ using namespace std;
         SetConsoleTextAttribute(hConsole, color); // color =  (WORD)((BackgroundColor << 4) | TextColor))
     }
 
-    //реализация Task 1: singletone
+    //Task 1: singletone
     void FileLoggerSingletone::OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out);
@@ -88,7 +88,7 @@ using namespace std;
         return string(buf);
     }
 
-    void  FileLoggerSingletone::WriteToLog(const string& str)
+    void FileLoggerSingletone::WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
@@ -112,7 +112,7 @@ using namespace std;
         }
     }
     
-    //реализация Task 2*:proxy
+    //Task 2*:proxy
 
     void ProxyLogger::OpenLogFile(const string& FN)
     {
@@ -126,13 +126,14 @@ using namespace std;
 
     string ProxyLogger::GetCurDateTime()
     {
-        FileLoggerSingletone::getInstance().GetCurDateTime();
+       return FileLoggerSingletone::getInstance().GetCurDateTime();
     }
 
     void ProxyLogger::WriteToLog(const string& str)
     {
         FileLoggerSingletone::getInstance().WriteToLog(to_string(ProxyloggerEventNum++) + ' ' + str);
     }
+
     void ProxyLogger::WriteToLog(const string& str, int n)
     {
         FileLoggerSingletone::getInstance().WriteToLog(to_string(ProxyloggerEventNum++) + ' ' + str, n);
